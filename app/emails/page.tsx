@@ -17,18 +17,23 @@ export default function Emails() {
 
   const [sess, setSess] = useState<any>("");
 
-  const get1Mail = async (eID: any, userEmail: any, acT: any) => {
+  const get1Mail = async (eDeets: any, userEmail: any, acT: any) => {
     try {
-      const mail = await fetch(`https://www.googleapis.com/gmail/v1/users/${userEmail}/messages/${eID.id}`, {
+      const mail = await fetch(`https://www.googleapis.com/gmail/v1/users/${userEmail}/messages/${eDeets.id}`, {
         headers: {
           Authorization: `Bearer ${acT}`,
         }
       });
       const mailRes = await mail.json();
-      console.log("Email real: ", mailRes);
+      // console.log("Email real: ", mailRes);
+      const mainLabel: any = mailRes.labelIds;
+      const result: any = mainLabel.find((item: any) => item.startsWith("CATEGORY"));
+      const labelToUse: any = result.split("CATEGORY_")[1];
+
       const obj = {
         snippet: mailRes.snippet,
         senderName: mailRes.payload.headers.find((header: any) => header.name === "From").value,
+        category: labelToUse
       }
       
       return obj;
@@ -48,12 +53,17 @@ export default function Emails() {
   const fetchEmails = async (sess: any) => {
     const userEmail: any = sess ? sess.user.email : null;
     const acT: any = sess ? sess.accessToken : null;
+
+    // console.log("User email: ", userEmail);
+    // console.log("Access token: ", acT);
+    
+
     if(!userEmail) return;
     if(!acT) return;
 
 
     try {
-      const allMails = await fetch(`https://www.googleapis.com/gmail/v1/users/${userEmail}/messages`, {
+      const allMails: any = await fetch(`https://www.googleapis.com/gmail/v1/users/${userEmail}/messages`, {
         headers: {
           Authorization: `Bearer ${acT}`,
         }
@@ -61,15 +71,15 @@ export default function Emails() {
       // console.log("All emails: ", allMails);
       
       const res: any = await allMails.json();
-      // console.log("Single start res: ", res);
+      // console.log("Single start res: ", res.messages);
       
 
       let actualEmails: any = [];
       
-      for(let i = 0; i < nums && i < res.length; i++) {
-        console.log("Email deets: ", res[i]);
+      for(let i = 0; i < nums && i < res.messages.length; i++) {
+        // console.log("Email deets: ", res.messages[i]);
         
-        const mail = await get1Mail(res[i], userEmail, acT);
+        const mail = await get1Mail(res.messages[i], userEmail, acT);
         actualEmails.push(mail);
       }
 
@@ -97,6 +107,9 @@ export default function Emails() {
 
       if(!sess) return;
 
+      // console.log("session user in emails: ", sess.user.email);
+      // console.log("Session acT in emails: ", sess.accessToken);
+      
 
       await fetchEmails(sess);
     }
@@ -161,15 +174,31 @@ export default function Emails() {
 
       <div className="w-[90%] flex flex-col justify-start items-center text-white">
         {
-          emails && 
+          emails ?
           emails.map((obj: any, index: number) => (
             <div key={index} className="text-white border w-[100%]  rounded-[5px] mb-4 px-4 py-2 flex flex-col justify-start items-start">
-                <div>{obj.senderName}</div>
+                <div className="font-semibold my-4 w-[100%] flex flex-row justify-between items-center pr-2 sm:pr-8">
+                  <span>{obj.senderName}</span>
+                  <div className={`text-green-500  font-semibold`}>{obj.category}</div>
+                </div>
                 <div>{obj.snippet}</div>
             </div>
           ))
+          :
+          <div>
+            Loading...
+          </div>
         }
       </div>
     </div>
   );
 }
+
+
+
+// Important: Emails that are personal or work-related and require immediate attention.
+// Promotions: Emails related to sales, discounts, and marketing campaigns.
+// Social: Emails from social networks, friends, and family.
+// Marketing: Emails related to marketing, newsletters, and notifications.
+// Spam: Unwanted or unsolicited emails.
+// General: If none of the above are matched, use General
