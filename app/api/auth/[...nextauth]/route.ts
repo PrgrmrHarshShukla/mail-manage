@@ -7,7 +7,7 @@ const GOOGLE_CLIENT_ID: any = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET: any = process.env.GOOGLE_CLIENT_SECRET;
 
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: GOOGLE_CLIENT_ID,
