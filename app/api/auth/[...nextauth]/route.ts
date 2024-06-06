@@ -14,19 +14,14 @@ export const authOptions: NextAuthOptions = {
       clientSecret: GOOGLE_CLIENT_SECRET,
       authorization: {
         params: {
-          scope: [
-            "https://www.googleapis.com/auth/gmail.readonly",
-            "https://www.googleapis.com/auth/userinfo.email",
-            "https://www.googleapis.com/auth/userinfo.profile",
-            "openid"
-          ].join(" "),
+          scope: "openid email profile https://www.googleapis.com/auth/gmail.readonly",
         },
       },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
   // debug: true,
-  // callbacks: {
+  callbacks: {
   //   async signIn({ user, account, profile, email, credentials }) {
   //     console.log('signIn callback:', { user, account, profile, email, credentials });
   //     return "/emails";
@@ -35,15 +30,17 @@ export const authOptions: NextAuthOptions = {
   //     console.log('redirect callback:', { url, baseUrl });
   //     return baseUrl;
   //   },
-  //   async session({ session, user, token }) {
-  //     console.log('session callback:', { session, user, token });
-  //     return session;
-  //   },
-  //   async jwt({ token, user, account, profile, isNewUser }) {
-  //     console.log('jwt callback:', { token, user, account, profile, isNewUser });
-  //     return token;
-  //   },
-  // },
+  async jwt({ token, user, account, profile }) {
+    // console.log('jwt callback:', { token, user, account, profile });
+      if(account) token.accessToken = account.access_token;
+      return token;
+    },
+    async session({ session, user, token }: {session: any, user: any, token: any}) {
+      // console.log('session callback:', { session, user, token });
+      session.accessToken = token.accessToken;
+      return session;
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);

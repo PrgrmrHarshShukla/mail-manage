@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { google } from "googleapis";
+import { getSession } from "next-auth/react";
 
 export async function GET(req: NextRequest) {
   const token: any = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+  // const session: any = await getSession({ req });
+
 
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

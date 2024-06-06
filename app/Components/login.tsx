@@ -21,7 +21,7 @@ export default function Login() {
     // )
 
     if(session.status === "authenticated") {
-        // router.push("/emails");
+        router.push("/emails");
         return (
             <div className="flex flex-row justify-center items-center gap-4">
                 <button
