@@ -7,7 +7,7 @@ import { act, useEffect, useState } from "react";
 
 export default function Emails() {
   const [emails, setEmails] = useState([]);
-  const [nums, setNums] = useState(15);
+  const [nums, setNums] = useState(5);
   const {data: session}: any = useSession({
     required: true,
     onUnauthenticated() {
@@ -30,10 +30,29 @@ export default function Emails() {
       const result: any = mainLabel.find((item: any) => item.startsWith("CATEGORY"));
       const labelToUse: any = result.split("CATEGORY_")[1];
 
+      const mainAIKey: any = localStorage.getItem("mailmanagerKey");
+
+      const label: any = await fetch(`/api/getCategory`, {
+        method: "POST",
+        body: JSON.stringify({
+          key: mainAIKey,
+          message: mailRes.snippet
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      let labelRes: any = await label.json();
+      if(!label.ok) {
+        labelRes = "General";
+      }
+      console.log("Label res: ", labelRes);
+
+
       const obj = {
         snippet: mailRes.snippet,
         senderName: mailRes.payload.headers.find((header: any) => header.name === "From").value,
-        category: labelToUse
+        category: labelRes
       }
       
       return obj;
@@ -70,6 +89,7 @@ export default function Emails() {
         }
       });
       // console.log("All emails: ", allMails);
+      
       
       const res: any = await allMails.json();
       // console.log("Single start res: ", res.messages);
@@ -154,7 +174,7 @@ export default function Emails() {
 
         <button
             onClick={() => {
-              localStorage.removeItem("mailmanagerKey");
+              // localStorage.removeItem("mailmanagerKey");
               signOut();
             }}
             className="flex flex-col justify-center items-center px-20 py-4 font-bold">
@@ -183,7 +203,11 @@ export default function Emails() {
             <div key={index} className="text-white border w-[100%]  rounded-[5px] mb-4 px-4 py-2 flex flex-col justify-start items-start">
                 <div className="font-semibold my-4 w-[100%] flex flex-row justify-between items-center pr-2 sm:pr-8">
                   <span>{obj.senderName}</span>
-                  {/* <div className={`text-green-500  font-semibold`}>{obj.category ? obj.category[0] + obj.category.subString[1].toLowerCase() : "Category"}</div> */}
+                  {obj.category == "General" && <div className={`text-purple-800  font-bold`}>{obj.category}</div>}
+                  {obj.category == "Important" && <div className={`text-green-500  font-bold`}>{obj.category}</div>}
+                  {obj.category == "Social" && <div className={`text-blue-500  font-bold`}>{obj.category}</div>}
+                  {obj.category == "Marketing" && <div className={`text-yellow-500  font-bold`}>{obj.category}</div>}
+                  {obj.category == "Spam" && <div className={`text-red-500  font-bold`}>{obj.category}</div>}
                 </div>
                 <div>{obj.snippet}</div>
             </div>

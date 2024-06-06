@@ -5,13 +5,17 @@ import { getSession } from "next-auth/react";
 import OpenAI from "openai";
 
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
     try{
         
-        const link = new URL(req.url);
-        const message: any = link.searchParams.get("msg");
-        const key: any = link.searchParams.get("key");
+        // const link = new URL(req.url);
+        // const message: any = link.searchParams.get("msg");
+        // const key: any = link.searchParams.get("key");
+        const body: any = await req.json();
+        const { key, message } = body;
 
+        // console.log("Key: ", key);
+        // console.log("Message: ", message);
 
         const openai = new OpenAI({ apiKey: key });
 
@@ -29,19 +33,24 @@ export async function GET(req: NextRequest) {
                 Please reply with just the Category name.`,
             },
         ],
-        model: "gpt-4o",
+        model: "gpt-3.5-turbo",
         });
 
+        console.log("Completion: ", completion.choices[0].message["content"]);
+        
         const responseContent: any = completion.choices[0].message["content"];
+        if (!responseContent) {
+            throw new Error("No content in completion response");
+        }
 
-        console.log("Response content: ", responseContent);
+        // console.log("Response content: ", responseContent);
         
 
         return NextResponse.json({
-            msg: "Hello!"
+            msg: responseContent
         }, { status: 200 });
   } 
   catch (error: any) {
-    return NextResponse.json({ error: "Failed to get label!" }, { status: 500 });
+    return NextResponse.json({ msg: "General" }, { status: 500 });
   }
 }

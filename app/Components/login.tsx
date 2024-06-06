@@ -43,7 +43,7 @@ export default function Login() {
     }
     
 
-    const handleClick = async () => {
+    const handleClick = () => {
         if(!localStorage.getItem("mailmanagerKey")) {
             alert("Please enter OpenAI API Key!")
             return;
