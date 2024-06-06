@@ -18,6 +18,8 @@ export async function POST(req: NextRequest) {
         // console.log("Message: ", message);
 
         const openai = new OpenAI({ apiKey: key });
+        // console.log("\n\n\nHere in getCategory\n\n\n\n!");
+        
 
         const completion = await openai.chat.completions.create({
         messages: [
@@ -33,10 +35,13 @@ export async function POST(req: NextRequest) {
                 Please reply with just the Category name.`,
             },
         ],
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o",
         });
-
-        console.log("Completion: ", completion.choices[0].message["content"]);
+        // console.log("Here after that!!!!!!\n\n\n\n\n");
+        
+        // const response: any = completion;
+        // console.log("Completion: ", completion);
+        // console.log("Completion: ", completion.choices[0].message["content"]);
         
         const responseContent: any = completion.choices[0].message["content"];
         if (!responseContent) {

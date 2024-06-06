@@ -7,7 +7,7 @@ import { act, useEffect, useState } from "react";
 
 export default function Emails() {
   const [emails, setEmails] = useState([]);
-  const [nums, setNums] = useState(5);
+  const [nums, setNums] = useState(15);
   const {data: session}: any = useSession({
     required: true,
     onUnauthenticated() {
@@ -186,7 +186,12 @@ export default function Emails() {
 
       
       <div className="w-[90%] flex flex-row justify-between items-center text-white mb-12">
-        <input value={nums} onChange={(e: any) => setNums(e.target.value)} type="number" readOnly className=" border-[3px] rounded-[3px] text-right bg-black border-white w-[50px] pl-2 font-bold outline-none resize-none"  />
+        <input 
+          value={nums} 
+          onChange={(e: any) => setNums(e.target.value)} 
+          type="number" 
+          className=" border-[3px] rounded-[3px] text-right bg-black border-white w-[50px] pl-2 font-bold outline-none resize-none"  
+        />
         <button
             onClick={handleClassify}
             className="flex flex-col justify-center items-center px-20 py-4"
