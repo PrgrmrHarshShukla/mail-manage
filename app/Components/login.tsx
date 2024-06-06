@@ -44,7 +44,12 @@ export default function Login() {
     
 
     const handleClick = async () => {
-        await signIn("google");
+        if(!localStorage.getItem("mailmanagerKey")) {
+            alert("Please enter OpenAI API Key!")
+            return;
+        }
+
+        signIn("google");
         // router.push("/emails");
     }
 
@@ -54,8 +59,8 @@ export default function Login() {
 
   return (
     <button
-        onClick={() => signIn("google")}
-        className="rounded-[5px] border-[4px] border-white flex flex-col justify-center items-center px-20 py-4">
+        onClick={handleClick}
+        className="rounded-[5px] border-[4px] min-w-[350px] border-white flex flex-col justify-center items-center px-20 py-4">
         <div>
             Login with Google
         </div>

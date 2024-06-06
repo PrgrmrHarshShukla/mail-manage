@@ -43,6 +43,7 @@ export default function Emails() {
       return {
         snippet: "",
         senderName: "",
+        category: ""
       }
     }
   }
@@ -152,7 +153,10 @@ export default function Emails() {
         </div>
 
         <button
-            onClick={() => signOut()}
+            onClick={() => {
+              localStorage.removeItem("mailmanagerKey");
+              signOut();
+            }}
             className="flex flex-col justify-center items-center px-20 py-4 font-bold">
             <div>
                 Logout
@@ -174,19 +178,19 @@ export default function Emails() {
 
       <div className="w-[90%] flex flex-col justify-start items-center text-white">
         {
-          emails ?
+          emails.length > 0 ?
           emails.map((obj: any, index: number) => (
             <div key={index} className="text-white border w-[100%]  rounded-[5px] mb-4 px-4 py-2 flex flex-col justify-start items-start">
                 <div className="font-semibold my-4 w-[100%] flex flex-row justify-between items-center pr-2 sm:pr-8">
                   <span>{obj.senderName}</span>
-                  <div className={`text-green-500  font-semibold`}>{obj.category}</div>
+                  {/* <div className={`text-green-500  font-semibold`}>{obj.category ? obj.category[0] + obj.category.subString[1].toLowerCase() : "Category"}</div> */}
                 </div>
                 <div>{obj.snippet}</div>
             </div>
           ))
           :
-          <div>
-            Loading...
+          <div className="text-white font-bold text-3xl animate-pulse mt-20">
+            Loading emails...
           </div>
         }
       </div>
@@ -196,9 +200,3 @@ export default function Emails() {
 
 
 
-// Important: Emails that are personal or work-related and require immediate attention.
-// Promotions: Emails related to sales, discounts, and marketing campaigns.
-// Social: Emails from social networks, friends, and family.
-// Marketing: Emails related to marketing, newsletters, and notifications.
-// Spam: Unwanted or unsolicited emails.
-// General: If none of the above are matched, use General
