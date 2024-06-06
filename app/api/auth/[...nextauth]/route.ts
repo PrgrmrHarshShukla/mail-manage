@@ -25,25 +25,25 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-  debug: true,
-  callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      console.log('signIn callback:', { user, account, profile, email, credentials });
-      return "/emails";
-    },
-    async redirect({ url, baseUrl }) {
-      console.log('redirect callback:', { url, baseUrl });
-      return baseUrl;
-    },
-    async session({ session, user, token }) {
-      console.log('session callback:', { session, user, token });
-      return session;
-    },
-    async jwt({ token, user, account, profile, isNewUser }) {
-      console.log('jwt callback:', { token, user, account, profile, isNewUser });
-      return token;
-    },
-  },
+  // debug: true,
+  // callbacks: {
+  //   async signIn({ user, account, profile, email, credentials }) {
+  //     console.log('signIn callback:', { user, account, profile, email, credentials });
+  //     return "/emails";
+  //   },
+  //   async redirect({ url, baseUrl }) {
+  //     console.log('redirect callback:', { url, baseUrl });
+  //     return baseUrl;
+  //   },
+  //   async session({ session, user, token }) {
+  //     console.log('session callback:', { session, user, token });
+  //     return session;
+  //   },
+  //   async jwt({ token, user, account, profile, isNewUser }) {
+  //     console.log('jwt callback:', { token, user, account, profile, isNewUser });
+  //     return token;
+  //   },
+  // },
 };
 
 const handler = NextAuth(authOptions);
