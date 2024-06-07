@@ -44,7 +44,7 @@ export default function Emails() {
       });
       let labelRes: any = await label.json();
       if(!label.ok) {
-        labelRes = "General";
+        labelRes.msg = "General";
       }
       console.log("Label res: ", labelRes);
 
@@ -52,7 +52,7 @@ export default function Emails() {
       const obj = {
         snippet: mailRes.snippet,
         senderName: mailRes.payload.headers.find((header: any) => header.name === "From").value,
-        category: labelRes
+        category: labelRes.msg
       }
       
       return obj;
