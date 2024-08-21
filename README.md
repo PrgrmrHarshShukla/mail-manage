@@ -1,3 +1,11 @@
+### Assignment Submission Preview
+![image](https://github.com/user-attachments/assets/47cec1c0-69a2-4f92-990d-6983ac8d3436)
+![image](https://github.com/user-attachments/assets/0958f73a-63ff-46e2-86f1-526f78f44f13)
+
+All the emails were fetched, but did not show all of them in the screenshot here.
+
+
+
 
 ## Getting Started
 
